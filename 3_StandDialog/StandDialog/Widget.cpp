@@ -3,38 +3,43 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QColorDialog>
-
+#include <QInputDialog>
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
-    SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this)
+    SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this), InputBtn(this)
 {
     SimpleMsgBtn.setText("Simple Message Dialog");
     SimpleMsgBtn.move(20, 20);
-    SimpleMsgBtn.resize(180, 30);
+    SimpleMsgBtn.resize(220, 30);
 
     CustomMsgBtn.setText("Custom Message Dialog");
     CustomMsgBtn.move(20, 70);
-    CustomMsgBtn.resize(180, 30);
+    CustomMsgBtn.resize(220, 30);
 
     OpenFileBtn.setText("Open File Dialog");
     OpenFileBtn.move(20, 120);
-    OpenFileBtn.resize(180, 30);
+    OpenFileBtn.resize(220, 30);
 
     SaveFileBtn.setText("Save File Dialog");
     SaveFileBtn.move(20, 170);
-    SaveFileBtn.resize(180, 30);
+    SaveFileBtn.resize(220, 30);
 
     ColorBtn.setText("Color Dialog");
     ColorBtn.move(20, 220);
-    ColorBtn.resize(180, 30);
+    ColorBtn.resize(220, 30);
 
-    setFixedSize(220, 270);
+    InputBtn.setText("Input Dialog");
+    InputBtn.move(20, 270);
+    InputBtn.resize(220, 30);
+
+    setFixedSize(260, 320);
 
     connect(&SimpleMsgBtn, SIGNAL(clicked()), this, SLOT(SimpleMsgBtn_Clicked()));
     connect(&CustomMsgBtn, SIGNAL(clicked()), this, SLOT(CustomMsgBtn_Clicked()));
     connect(&OpenFileBtn, SIGNAL(clicked()), this, SLOT(OpenFileBtn_Clicked()));
     connect(&SaveFileBtn, SIGNAL(clicked()), this, SLOT(SaveFileBtn_Clicked()));
     connect(&ColorBtn, SIGNAL(clicked()), this, SLOT(ColorBtn_Clicked()));
+    connect(&InputBtn, SIGNAL(clicked()), this, SLOT(InputBtn_Clicked()));
 }
 
 void Widget::SimpleMsgBtn_Clicked()
@@ -122,6 +127,26 @@ void Widget::ColorBtn_Clicked()
     qDebug() << color.red();
     qDebug() << color.green();
     qDebug() << color.blue();
+    */
+}
+
+void Widget::InputBtn_Clicked()
+{
+    QInputDialog dlg(this);
+
+    dlg.setWindowTitle("Input");
+    dlg.setInputMode(QInputDialog::IntInput);
+    dlg.setIntMinimum(0);
+    dlg.setIntMaximum(255);
+
+    if(QInputDialog::Accepted == dlg.exec())
+    {
+        qDebug() << dlg.intValue();
+    }
+
+    /*   //此效果与上述代码一致
+    int ret = QInputDialog::getInt(this, "Input", "please Input a value", 0, 0 , 255);
+    qDebug() << ret;
     */
 }
 
