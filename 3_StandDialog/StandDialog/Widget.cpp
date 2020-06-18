@@ -2,10 +2,11 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QColorDialog>
 
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
-    SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this)
+    SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this)
 {
     SimpleMsgBtn.setText("Simple Message Dialog");
     SimpleMsgBtn.move(20, 20);
@@ -23,12 +24,17 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     SaveFileBtn.move(20, 170);
     SaveFileBtn.resize(180, 30);
 
-    setFixedSize(220, 220);
+    ColorBtn.setText("Color Dialog");
+    ColorBtn.move(20, 220);
+    ColorBtn.resize(180, 30);
+
+    setFixedSize(220, 270);
 
     connect(&SimpleMsgBtn, SIGNAL(clicked()), this, SLOT(SimpleMsgBtn_Clicked()));
     connect(&CustomMsgBtn, SIGNAL(clicked()), this, SLOT(CustomMsgBtn_Clicked()));
     connect(&OpenFileBtn, SIGNAL(clicked()), this, SLOT(OpenFileBtn_Clicked()));
     connect(&SaveFileBtn, SIGNAL(clicked()), this, SLOT(SaveFileBtn_Clicked()));
+    connect(&ColorBtn, SIGNAL(clicked()), this, SLOT(ColorBtn_Clicked()));
 }
 
 void Widget::SimpleMsgBtn_Clicked()
@@ -90,6 +96,33 @@ void Widget::SaveFileBtn_Clicked()
             qDebug() << fs[i];
         }
     }
+}
+
+void Widget::ColorBtn_Clicked()
+{
+    QColorDialog dlg(this);
+
+    dlg.setWindowTitle("Color");
+    dlg.setCurrentColor(Qt::red);
+
+    if(QColorDialog::Accepted == dlg.exec())
+    {
+        QColor color = dlg.selectedColor();
+
+        qDebug() << color;
+        qDebug() << color.red();
+        qDebug() << color.green();
+        qDebug() << color.blue();
+    }
+
+    /* 效果与通过exec()函数返回一样
+    QColor color = dlg.selectedColor();
+
+    qDebug() << color;
+    qDebug() << color.red();
+    qDebug() << color.green();
+    qDebug() << color.blue();
+    */
 }
 
 Widget::~Widget()

@@ -12,11 +12,13 @@ private:
     QPushButton CustomMsgBtn;
     QPushButton OpenFileBtn;
     QPushButton SaveFileBtn;
+    QPushButton ColorBtn;
 private slots:
     void SimpleMsgBtn_Clicked();
     void CustomMsgBtn_Clicked();
     void OpenFileBtn_Clicked();
     void SaveFileBtn_Clicked();
+    void ColorBtn_Clicked();
 public:
     Widget(QWidget *parent = 0);
     ~Widget();
