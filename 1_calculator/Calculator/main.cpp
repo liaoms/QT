@@ -1,10 +1,11 @@
-#include "CalculatorUI.h"
 #include <QApplication>
+#include "Calculator.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    CalculatorUI* w = CalculatorUI::NewInstance();
+
+    Calculator* w = Calculator::NewInstance();
 
     int ret = -1;
 

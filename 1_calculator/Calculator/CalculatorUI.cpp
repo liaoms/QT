@@ -68,6 +68,18 @@ CalculatorUI* CalculatorUI::NewInstance()
     return ret;
 }
 
+//设置接口
+void CalculatorUI::setCalculator(ICalculator* cal)
+{
+    m_cal = cal;
+}
+
+//返回使用的接口
+ICalculator* CalculatorUI::getCalculator()
+{
+    return m_cal;
+}
+
 void CalculatorUI::show()
 {
     QWidget::show();
@@ -75,28 +87,32 @@ void CalculatorUI::show()
 
 void CalculatorUI::onButtonClicked()
 {
-    QPushButton* btn = static_cast<QPushButton*>(sender());
+    QPushButton* btn = dynamic_cast<QPushButton*>(sender());
 
-    QString str = btn->text();
-    if("<-" == str)
+    if(NULL != btn)
     {
-        QString lineText = m_pLineEdit->text();
+        QString str = btn->text();
+        if("<-" == str)
+        {
+            QString lineText = m_pLineEdit->text();
 
-        lineText.remove(lineText.length() - 1, 1);
-        m_pLineEdit->setText(lineText);
-    }
-    else if("C" == str)
-    {
-        m_pLineEdit->clear();
-    }
-    else if("=" == str)
-    {
-
-    }
-    else
-    {
-        QString lineText = m_pLineEdit->text() + str;
-        m_pLineEdit->setText(lineText);
+            lineText.remove(lineText.length() - 1, 1);
+            m_pLineEdit->setText(lineText);
+        }
+        else if("C" == str)
+        {
+            m_pLineEdit->clear();
+        }
+        else if("=" == str)
+        {
+            m_cal->expression(m_pLineEdit->text());  //使用计算接口
+            m_pLineEdit->setText(m_cal->result());      //使用获取结果接口
+        }
+        else
+        {
+            QString lineText = m_pLineEdit->text() + str;
+            m_pLineEdit->setText(lineText);
+        }
     }
 
 }
