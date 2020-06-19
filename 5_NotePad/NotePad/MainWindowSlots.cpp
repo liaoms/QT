@@ -189,3 +189,18 @@ void MainWindow::onTextChanged()
 
     m_isTextChanged = true;
 }
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    preEditorChange();
+
+    if(!m_isTextChanged)
+    {
+        QMainWindow::closeEvent(event);   //使用默认事件
+    }
+    else
+    {
+        event->ignore();    //忽略事件
+    }
+
+}

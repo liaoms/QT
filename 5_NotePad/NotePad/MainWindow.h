@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QFileDialog>
+#include <QCloseEvent>
 
 class MainWindow : public QMainWindow
 {
@@ -52,9 +53,13 @@ private slots:
         void onFileSave();
         void onFileSaveAs();
         void onTextChanged();
+
+protected:
+    void closeEvent(QCloseEvent* event);
+
 public:
 
-    static MainWindow* NewInstance();
+    static MainWindow* NewInstance();   //重写关闭事件
 
     ~MainWindow();
 };
