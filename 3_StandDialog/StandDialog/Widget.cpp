@@ -5,10 +5,11 @@
 #include <QColorDialog>
 #include <QInputDialog>
 #include <QFontDialog>
+#include <QProgressDialog>
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
     SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this),
-    InputBtn(this), FontBtn(this)
+    InputBtn(this), FontBtn(this), ProgressBtn(this)
 {
     SimpleMsgBtn.setText("Simple Message Dialog");
     SimpleMsgBtn.move(20, 20);
@@ -38,15 +39,20 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     FontBtn.move(20, 320);
     FontBtn.resize(220, 30);
 
-    setFixedSize(260, 370);
+    ProgressBtn.setText("Progress Dialog");
+    ProgressBtn.move(20, 370);
+    ProgressBtn.resize(220, 30);
 
-    connect(&SimpleMsgBtn, SIGNAL(clicked()), this, SLOT(SimpleMsgBtn_Clicked()));
-    connect(&CustomMsgBtn, SIGNAL(clicked()), this, SLOT(CustomMsgBtn_Clicked()));
-    connect(&OpenFileBtn, SIGNAL(clicked()), this, SLOT(OpenFileBtn_Clicked()));
-    connect(&SaveFileBtn, SIGNAL(clicked()), this, SLOT(SaveFileBtn_Clicked()));
-    connect(&ColorBtn, SIGNAL(clicked()), this, SLOT(ColorBtn_Clicked()));
-    connect(&InputBtn, SIGNAL(clicked()), this, SLOT(InputBtn_Clicked()));
-    connect(&FontBtn, SIGNAL(clicked()), this, SLOT(FontBtn_Clicked()));
+    setFixedSize(260, 420);
+
+    connect(&SimpleMsgBtn,  SIGNAL(clicked()), this, SLOT(SimpleMsgBtn_Clicked()));
+    connect(&CustomMsgBtn,  SIGNAL(clicked()), this, SLOT(CustomMsgBtn_Clicked()));
+    connect(&OpenFileBtn,   SIGNAL(clicked()), this, SLOT(OpenFileBtn_Clicked()));
+    connect(&SaveFileBtn,   SIGNAL(clicked()), this, SLOT(SaveFileBtn_Clicked()));
+    connect(&ColorBtn,      SIGNAL(clicked()), this, SLOT(ColorBtn_Clicked()));
+    connect(&InputBtn,      SIGNAL(clicked()), this, SLOT(InputBtn_Clicked()));
+    connect(&FontBtn,       SIGNAL(clicked()), this, SLOT(FontBtn_Clicked()));
+    connect(&ProgressBtn,   SIGNAL(clicked()), this, SLOT(ProgressBtn_Clicked()));
 }
 
 void Widget::SimpleMsgBtn_Clicked()
@@ -171,6 +177,23 @@ void Widget::FontBtn_Clicked()
 
     //此句跟上述代码效果一致
     //FontBtn.setFont(QFontDialog::getFont(NULL));
+}
+
+void Widget::ProgressBtn_Clicked()
+{
+    QProgressDialog dlg(this);
+
+    dlg.setWindowTitle("Progress");
+    dlg.setLabelText("Download ...");
+    dlg.setMinimum(0);
+    dlg.setMaximum(100);
+
+    dlg.setValue(0);
+
+    //创建一个线程，转用于更新进度条
+
+    dlg.exec();
+
 }
 
 Widget::~Widget()

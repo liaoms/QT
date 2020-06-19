@@ -15,6 +15,7 @@ private:
     QPushButton ColorBtn;
     QPushButton InputBtn;
     QPushButton FontBtn;
+    QPushButton ProgressBtn;
 private slots:
     void SimpleMsgBtn_Clicked();
     void CustomMsgBtn_Clicked();
@@ -23,6 +24,7 @@ private slots:
     void ColorBtn_Clicked();
     void InputBtn_Clicked();
     void FontBtn_Clicked();
+    void ProgressBtn_Clicked();
 public:
     Widget(QWidget *parent = 0);
     ~Widget();
