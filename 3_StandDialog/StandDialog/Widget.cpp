@@ -6,10 +6,13 @@
 #include <QInputDialog>
 #include <QFontDialog>
 #include <QProgressDialog>
+#include <QtPrintSupport/QPrintDialog>
+#include <QTextDocument>
+#include <QPrinter>
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
     SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this),
-    InputBtn(this), FontBtn(this), ProgressBtn(this)
+    InputBtn(this), FontBtn(this), ProgressBtn(this), PrintBtn(this)
 {
     SimpleMsgBtn.setText("Simple Message Dialog");
     SimpleMsgBtn.move(20, 20);
@@ -43,7 +46,11 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     ProgressBtn.move(20, 370);
     ProgressBtn.resize(220, 30);
 
-    setFixedSize(260, 420);
+    PrintBtn.setText("Printer Dialog");
+    PrintBtn.move(20, 420);
+    PrintBtn.resize(220, 30);
+
+    setFixedSize(260, 470);
 
     connect(&SimpleMsgBtn,  SIGNAL(clicked()), this, SLOT(SimpleMsgBtn_Clicked()));
     connect(&CustomMsgBtn,  SIGNAL(clicked()), this, SLOT(CustomMsgBtn_Clicked()));
@@ -53,6 +60,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     connect(&InputBtn,      SIGNAL(clicked()), this, SLOT(InputBtn_Clicked()));
     connect(&FontBtn,       SIGNAL(clicked()), this, SLOT(FontBtn_Clicked()));
     connect(&ProgressBtn,   SIGNAL(clicked()), this, SLOT(ProgressBtn_Clicked()));
+    connect(&PrintBtn,      SIGNAL(clicked()), this, SLOT(PrintBtn_Clicked()));
 }
 
 void Widget::SimpleMsgBtn_Clicked()
@@ -194,6 +202,24 @@ void Widget::ProgressBtn_Clicked()
 
     dlg.exec();
 
+}
+
+void Widget::PrintBtn_Clicked()
+{
+    QPrintDialog dlg(this);
+    dlg.setWindowTitle("Printer");
+
+    if(QPrintDialog::Accepted == dlg.exec())
+    {
+        QPrinter *p = dlg.printer();
+        p->setOutputFileName("E:\\DTSoftWare\\Qt\\test.xps");
+
+        QTextDocument td;
+        //td.setPlainText("Hello World");
+        td.setHtml("<h1>Print html object test</hl>");
+
+        td.print(p);
+    }
 }
 
 Widget::~Widget()
