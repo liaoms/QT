@@ -14,6 +14,7 @@ private:
     QPlainTextEdit mainEditor;
     QLabel statusLbl;
     QString m_filePath;
+    bool m_isTextChanged;
 
     MainWindow();
     MainWindow(const MainWindow& obj);
@@ -40,12 +41,17 @@ private:
     bool makeAction(QAction*& action, QString tip, QString icon);
 
     QString showFileDialog(QFileDialog::AcceptMode mode, QString title);
+    int showQueryMessage(QString message);
     void showErrorMessage(QString message);
+    QString saveCurrentData(QString path = "");
+    void preEditorChange();
 
 private slots:
+        void onFileNew();
         void onFileOpen();
         void onFileSave();
         void onFileSaveAs();
+        void onTextChanged();
 public:
 
     static MainWindow* NewInstance();

@@ -17,6 +17,18 @@ void MainWindow::showErrorMessage(QString message)
     msg.exec();
 }
 
+int MainWindow::showQueryMessage(QString message)
+{
+    QMessageBox msg(this);
+
+    msg.setWindowTitle("Query");
+    msg.setText(message);
+    msg.setIcon(QMessageBox::Question);
+    msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+    return msg.exec();
+}
+
 QString MainWindow::showFileDialog(QFileDialog::AcceptMode mode, QString title)
 {
     QString ret = "";
@@ -43,27 +55,106 @@ QString MainWindow::showFileDialog(QFileDialog::AcceptMode mode, QString title)
     return ret;
 }
 
-void MainWindow::onFileOpen()
+QString MainWindow::saveCurrentData(QString path)
 {
-    QString path = showFileDialog(QFileDialog::AcceptOpen, "Open");
+    QString ret = path;
 
-    if( path != "" )
+    if( ret == "" )
     {
-        QFile file(path);
+        ret = showFileDialog(QFileDialog::AcceptSave, "Save");
+    }
 
-        if( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+    if( ret != "" )
+    {
+        QFile file(ret);
+
+        if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
         {
-            mainEditor.setPlainText(QString(file.readAll()));
+            QTextStream out(&file);
+
+            out << mainEditor.toPlainText();
 
             file.close();
 
-            m_filePath = path;
+            setWindowTitle("NotePad - [ " + ret + " ]");
 
-            setWindowTitle("NotePad - [ " + m_filePath + " ]");
+            m_isTextChanged = false;
         }
         else
         {
-            showErrorMessage(QString("Open file error! \n\n") + "\"" + path + "\"");
+            showErrorMessage(QString("Save file error! \n\n") + "\"" + ret + "\"");
+
+            ret = "";
+        }
+    }
+
+    return ret;
+}
+
+void MainWindow::preEditorChange()
+{
+    if( m_isTextChanged )
+    {
+        int r = showQueryMessage("Do you want to save the changes to file?");
+
+        switch(r)
+        {
+        case QMessageBox::Yes:
+            saveCurrentData(m_filePath);
+            break;
+        case QMessageBox::No:
+            m_isTextChanged = false;
+            break;
+        case QMessageBox::Cancel:
+            break;
+        }
+    }
+}
+
+void MainWindow::onFileNew()
+{
+    preEditorChange();
+
+    if( !m_isTextChanged )
+    {
+        mainEditor.clear();
+
+        setWindowTitle("NotePad - [ New ]");
+
+        m_filePath = "";
+
+        m_isTextChanged = false;
+    }
+}
+
+void MainWindow::onFileOpen()
+{
+    preEditorChange();
+
+    if( !m_isTextChanged )
+    {
+        QString path = showFileDialog(QFileDialog::AcceptOpen, "Open");
+
+        if( path != "" )
+        {
+            QFile file(path);
+
+            if( file.open(QIODevice::ReadOnly | QIODevice::Text) )
+            {
+                mainEditor.setPlainText(QString(file.readAll()));
+
+                file.close();
+
+                m_filePath = path;
+
+                m_isTextChanged = false;
+
+                setWindowTitle("NotePad - [ " + m_filePath + " ]");
+            }
+            else
+            {
+                showErrorMessage(QString("Open file error! \n\n") + "\"" + path + "\"");
+            }
         }
     }
 }
@@ -71,57 +162,30 @@ void MainWindow::onFileOpen()
 
 void MainWindow::onFileSave()
 {
-    if( m_filePath == "" )
+    QString path = saveCurrentData(m_filePath);
+
+    if( path != "" )
     {
-        m_filePath = showFileDialog(QFileDialog::AcceptSave, "Save");
-    }
-
-    if( m_filePath != "" )
-    {
-        QFile file(m_filePath);
-
-        if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        {
-            QTextStream out(&file);
-
-            out << mainEditor.toPlainText();
-
-            file.close();
-
-            setWindowTitle("NotePad - [ " + m_filePath + " ]");
-        }
-        else
-        {
-            showErrorMessage(QString("Save file error! \n\n") + "\"" + m_filePath + "\"");
-
-            m_filePath = "";
-        }
+        m_filePath = path;
     }
 }
 
 void MainWindow::onFileSaveAs()
 {
-    QString path = showFileDialog(QFileDialog::AcceptSave, "Save As");
+    QString path = saveCurrentData();
 
     if( path != "" )
     {
-        QFile file(path);
-
-        if( file.open(QIODevice::WriteOnly | QIODevice::Text) )
-        {
-            QTextStream out(&file);
-
-            out << mainEditor.toPlainText();
-
-            file.close();
-
-            m_filePath = path;
-
-            setWindowTitle("NotePad - [ " + m_filePath + " ]");
-        }
-        else
-        {
-            showErrorMessage(QString("Save file error! \n\n") + "\"" + path + "\"");
-        }
+        m_filePath = path;
     }
+}
+
+void MainWindow::onTextChanged()
+{
+    if(!windowTitle().startsWith("*"))
+    {
+        setWindowTitle("*" + windowTitle());
+    }
+
+    m_isTextChanged = true;
 }

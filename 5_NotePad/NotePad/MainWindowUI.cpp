@@ -7,7 +7,11 @@
 
 MainWindow::MainWindow() : QMainWindow()
 {
+    setWindowTitle("NotePad - [ New ]");
+
     m_filePath = "";
+
+    m_isTextChanged = false;
 }
 
 bool MainWindow::construct()
@@ -106,6 +110,8 @@ bool MainWindow::initMainEditor()
 
     mainEditor.setParent(this);
 
+    connect(&mainEditor, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+
     setCentralWidget(&mainEditor);
 
     return ret;
@@ -124,6 +130,7 @@ bool MainWindow::initFileMenu(QMenuBar* mb)
 
         if( ret )
         {
+            connect(action, SIGNAL(triggered()), this, SLOT(onFileNew()));
             menu->addAction(action);
         }
 
@@ -397,6 +404,7 @@ bool MainWindow::initFileToolItem(QToolBar* tb)
 
     if( ret )
     {
+        connect(action, SIGNAL(triggered()), this, SLOT(onFileNew()));
         tb->addAction(action);
     }
 
