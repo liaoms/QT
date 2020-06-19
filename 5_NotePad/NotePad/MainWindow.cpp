@@ -3,6 +3,7 @@
 #include <QMenuBar>
 #include <QToolBar>
 #include <QIcon>
+#include <QStatusBar>
 
 MainWindow::MainWindow() : QMainWindow()
 {
@@ -14,6 +15,7 @@ bool MainWindow::construct()
 
     ret = ret && initMenuBar();
     ret = ret && initToolBar();
+    ret = ret && initStatusBar();
 
     return ret;
 }
@@ -65,6 +67,33 @@ bool MainWindow::initToolBar()
     tb->addSeparator();
 
     ret = ret && initViewToolItem(tb);
+
+    return ret;
+}
+
+bool MainWindow::initStatusBar()
+{
+    bool ret = true;
+    QStatusBar* sb = statusBar();
+    QLabel* label = new QLabel("L.M.S");
+
+    if( label != NULL )
+    {
+        statusLbl.setMinimumWidth(200);
+        statusLbl.setAlignment(Qt::AlignCenter);
+        statusLbl.setText("Ln: 1    Col: 1");
+
+        label->setMinimumWidth(200);
+        label->setAlignment(Qt::AlignCenter);
+
+        sb->addPermanentWidget(new QLabel());
+        sb->addPermanentWidget(&statusLbl);
+        sb->addPermanentWidget(label);
+    }
+    else
+    {
+        ret = false;
+    }
 
     return ret;
 }
@@ -494,8 +523,6 @@ bool MainWindow::initViewToolItem(QToolBar* tb)
 
     return ret;
 }
-
-
 
 bool MainWindow::makeAction(QAction*& action, QString text, int key)
 {

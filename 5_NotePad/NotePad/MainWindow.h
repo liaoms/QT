@@ -2,12 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
+    QLabel statusLbl;
+
     MainWindow();
     MainWindow(const MainWindow& obj);
     MainWindow& operator = (const MainWindow& obj);
@@ -16,6 +19,7 @@ private:
 
     bool initMenuBar();
     bool initToolBar();
+    bool initStatusBar();
 
     bool initFileMenu(QMenuBar* mb);
     bool initEditMenu(QMenuBar* mb);
