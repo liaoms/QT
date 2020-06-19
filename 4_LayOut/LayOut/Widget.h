@@ -21,6 +21,7 @@ private:
 
 private slots:
     void onBtn6_clicked();
+    void TimeOut();
 
 public:
     Widget(QWidget *parent = 0);

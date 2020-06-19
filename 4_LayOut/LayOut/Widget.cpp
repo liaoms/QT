@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QStackedLayout>
+#include <QTimer>
 
 Widget::Widget(QWidget *parent) : QWidget(parent)
 {
@@ -116,6 +117,9 @@ void Widget::testStackLayout()
     m_pSLayout = new QStackedLayout();
     QVBoxLayout* pVBLayout = new QVBoxLayout();
 
+    QTimer* pTime = new QTimer(this);
+
+
     m_pSLayout->addWidget(&m_testBtn1);
     m_pSLayout->addWidget(&m_testBtn2);
     m_pSLayout->addWidget(&m_testBtn3);
@@ -130,6 +134,9 @@ void Widget::testStackLayout()
     setLayout(pVBLayout);
 
     connect(&m_testBtn6, SIGNAL(clicked()), this, SLOT(onBtn6_clicked()));
+    connect(pTime, SIGNAL(timeout()), this, SLOT(TimeOut()));
+
+    pTime->start(1000);
 
 }
 
@@ -139,6 +146,11 @@ void Widget::onBtn6_clicked()
     int index = (m_pSLayout->currentIndex() + 1) % m_pSLayout->count();
 
     m_pSLayout->setCurrentIndex(index);
+}
+
+void Widget::TimeOut()
+{
+    onBtn6_clicked();
 }
 
 Widget::~Widget()
