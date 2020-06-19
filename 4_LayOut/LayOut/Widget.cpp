@@ -2,13 +2,15 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QFormLayout>
 
 Widget::Widget(QWidget *parent) : QWidget(parent)
 {
     init();
 
     //testVHBoxLayout();
-    testGridLayout();
+    //testGridLayout();
+    testFormLayout();
 }
 
 void Widget::init()
@@ -82,6 +84,28 @@ void Widget::testGridLayout()
     pGLayout->setColumnStretch(1, 2);
 
     this->setLayout(pGLayout);
+}
+
+void Widget::testFormLayout()
+{
+    QFormLayout *pFLayout = new QFormLayout(this);
+    QVBoxLayout *pVBlayout = new QVBoxLayout(this);
+
+    pVBlayout->addWidget(&m_testBtn4);
+    pVBlayout->addWidget(&m_testBtn5);
+    pVBlayout->addWidget(&m_testBtn6);
+
+    pFLayout->addRow("lable1", &m_testBtn1);
+    pFLayout->addRow("lable2", &m_testBtn2);
+    pFLayout->addRow("lable3", &m_testBtn3);
+
+    pFLayout->addRow("lable4", pVBlayout);
+
+    pFLayout->setFormAlignment(Qt::AlignCenter);
+    pFLayout->setLabelAlignment(Qt::AlignVCenter);
+    //pFLayout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+
+    setLayout(pFLayout);
 
 }
 

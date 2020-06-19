@@ -23,6 +23,7 @@ public:
 
     void testVHBoxLayout();
     void testGridLayout();
+    void testFormLayout();
 
     ~Widget();
 };
