@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include <QStackedLayout>
 
 class Widget : public QWidget
 {
@@ -16,6 +17,11 @@ private:
     QPushButton m_testBtn5;
     QPushButton m_testBtn6;
 
+    QStackedLayout* m_pSLayout;
+
+private slots:
+    void onBtn6_clicked();
+
 public:
     Widget(QWidget *parent = 0);
 
@@ -24,6 +30,8 @@ public:
     void testVHBoxLayout();
     void testGridLayout();
     void testFormLayout();
+    void testStackLayout();
+
 
     ~Widget();
 };

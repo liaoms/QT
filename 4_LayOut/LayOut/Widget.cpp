@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QFormLayout>
+#include <QStackedLayout>
 
 Widget::Widget(QWidget *parent) : QWidget(parent)
 {
@@ -10,7 +11,8 @@ Widget::Widget(QWidget *parent) : QWidget(parent)
 
     //testVHBoxLayout();
     //testGridLayout();
-    testFormLayout();
+    //testFormLayout();
+    testStackLayout();
 }
 
 void Widget::init()
@@ -38,7 +40,7 @@ void Widget::init()
     m_testBtn5.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     m_testBtn6.setParent(this);
-    m_testBtn6.setText("Btn6");
+    m_testBtn6.setText("next");
     m_testBtn6.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
@@ -107,6 +109,36 @@ void Widget::testFormLayout()
 
     setLayout(pFLayout);
 
+}
+
+void Widget::testStackLayout()
+{
+    m_pSLayout = new QStackedLayout();
+    QVBoxLayout* pVBLayout = new QVBoxLayout();
+
+    m_pSLayout->addWidget(&m_testBtn1);
+    m_pSLayout->addWidget(&m_testBtn2);
+    m_pSLayout->addWidget(&m_testBtn3);
+    m_pSLayout->addWidget(&m_testBtn4);
+    m_pSLayout->addWidget(&m_testBtn5);
+
+    m_pSLayout->setCurrentIndex(0);
+
+    pVBLayout->addLayout(m_pSLayout, 4);
+    pVBLayout->addWidget(&m_testBtn6, 1);
+
+    setLayout(pVBLayout);
+
+    connect(&m_testBtn6, SIGNAL(clicked()), this, SLOT(onBtn6_clicked()));
+
+}
+
+//切换下一个Stack布局的界面
+void Widget::onBtn6_clicked()
+{
+    int index = (m_pSLayout->currentIndex() + 1) % m_pSLayout->count();
+
+    m_pSLayout->setCurrentIndex(index);
 }
 
 Widget::~Widget()
