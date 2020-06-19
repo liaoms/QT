@@ -3,12 +3,14 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QPlainTextEdit>
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
+    QPlainTextEdit mainEditor;
     QLabel statusLbl;
 
     MainWindow();
@@ -20,6 +22,7 @@ private:
     bool initMenuBar();
     bool initToolBar();
     bool initStatusBar();
+    bool initMainEditor();
 
     bool initFileMenu(QMenuBar* mb);
     bool initEditMenu(QMenuBar* mb);

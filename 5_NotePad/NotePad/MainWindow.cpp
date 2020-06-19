@@ -16,6 +16,7 @@ bool MainWindow::construct()
     ret = ret && initMenuBar();
     ret = ret && initToolBar();
     ret = ret && initStatusBar();
+    ret = ret && initMainEditor();
 
     return ret;
 }
@@ -94,6 +95,17 @@ bool MainWindow::initStatusBar()
     {
         ret = false;
     }
+
+    return ret;
+}
+
+bool MainWindow::initMainEditor()
+{
+    bool ret = true;
+
+    mainEditor.setParent(this);
+
+    setCentralWidget(&mainEditor);
 
     return ret;
 }
