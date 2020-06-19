@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPlainTextEdit>
+#include <QFileDialog>
 
 class MainWindow : public QMainWindow
 {
@@ -12,6 +13,7 @@ class MainWindow : public QMainWindow
 private:
     QPlainTextEdit mainEditor;
     QLabel statusLbl;
+    QString m_filePath;
 
     MainWindow();
     MainWindow(const MainWindow& obj);
@@ -36,6 +38,14 @@ private:
 
     bool makeAction(QAction*& action, QString text, int key);
     bool makeAction(QAction*& action, QString tip, QString icon);
+
+    QString showFileDialog(QFileDialog::AcceptMode mode, QString title);
+    void showErrorMessage(QString message);
+
+private slots:
+        void onFileOpen();
+        void onFileSave();
+        void onFileSaveAs();
 public:
 
     static MainWindow* NewInstance();
