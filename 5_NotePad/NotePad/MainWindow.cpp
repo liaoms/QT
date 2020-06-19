@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include <QMenu>
 #include <QMenuBar>
+#include <QToolBar>
+#include <QIcon>
 
 MainWindow::MainWindow() : QMainWindow()
 {
@@ -11,6 +13,7 @@ bool MainWindow::construct()
     bool ret = true;
 
     ret = ret && initMenuBar();
+    ret = ret && initToolBar();
 
     return ret;
 }
@@ -38,6 +41,30 @@ bool MainWindow::initMenuBar()
     ret = ret && initFormatMenu(mb);
     ret = ret && initViewMenu(mb);
     ret = ret && initHelpMenu(mb);
+
+    return ret;
+}
+
+bool MainWindow::initToolBar()
+{
+    bool ret = true;
+    QToolBar* tb = addToolBar("Tool Bar");
+
+    tb->setIconSize(QSize(16, 16));
+
+    ret = ret && initFileToolItem(tb);
+
+    tb->addSeparator();
+
+    ret = ret && initEditToolItem(tb);
+
+    tb->addSeparator();
+
+    ret = ret && initFormatToolItem(tb);
+
+    tb->addSeparator();
+
+    ret = ret && initViewToolItem(tb);
 
     return ret;
 }
@@ -316,6 +343,159 @@ bool MainWindow::initHelpMenu(QMenuBar* mb)
     return ret;
 }
 
+bool MainWindow::initFileToolItem(QToolBar* tb)
+{
+    bool ret = true;
+    QAction* action = NULL;
+
+    ret = ret && makeAction(action, "New", ":/res/pic/new.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Open", ":/res/pic/open.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Save", ":/res/pic/save.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Save As", ":/res/pic/saveas.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Print", ":/res/pic/print.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+
+    return ret;
+}
+
+bool MainWindow::initEditToolItem(QToolBar* tb)
+{
+    bool ret = true;
+    QAction* action = NULL;
+
+    ret = ret && makeAction(action, "Undo", ":/res/pic/undo.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Redo", ":/res/pic/redo.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Cut", ":/res/pic/cut.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Copy", ":/res/pic/copy.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Paste", ":/res/pic/paste.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Find", ":/res/pic/find.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Replace", ":/res/pic/replace.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Goto", ":/res/pic/goto.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    return ret;
+}
+
+bool MainWindow::initFormatToolItem(QToolBar* tb)
+{
+    bool ret = true;
+    QAction* action = NULL;
+
+    ret = ret && makeAction(action, "Auto Wrap", ":/res/pic/wrap.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Font", ":/res/pic/font.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    return ret;
+}
+
+bool MainWindow::initViewToolItem(QToolBar* tb)
+{
+    bool ret = true;
+    QAction* action = NULL;
+
+    ret = ret && makeAction(action, "Tool Bar", ":/res/pic/tool.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    ret = ret && makeAction(action, "Status Bar", ":/res/pic/status.png");
+
+    if( ret )
+    {
+        tb->addAction(action);
+    }
+
+    return ret;
+}
+
+
 
 bool MainWindow::makeAction(QAction*& action, QString text, int key)
 {
@@ -326,6 +506,25 @@ bool MainWindow::makeAction(QAction*& action, QString text, int key)
     if( action != NULL )
     {
         action->setShortcut(QKeySequence(key));
+    }
+    else
+    {
+        ret = false;
+    }
+
+    return ret;
+}
+
+bool MainWindow::makeAction(QAction*& action, QString tip, QString icon)
+{
+    bool ret = true;
+
+    action = new QAction("", NULL);
+
+    if( action != NULL )
+    {
+        action->setToolTip(tip);
+        action->setIcon(QIcon(icon));
     }
     else
     {

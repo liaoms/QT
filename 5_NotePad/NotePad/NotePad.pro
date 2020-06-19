@@ -29,3 +29,6 @@ SOURCES += \
 
 HEADERS += \
         MainWindow.h
+
+RESOURCES += \
+    res.qrc
