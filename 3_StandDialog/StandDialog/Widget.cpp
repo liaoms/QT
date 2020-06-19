@@ -4,9 +4,11 @@
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QInputDialog>
+#include <QFontDialog>
 
 Widget::Widget(QWidget *parent) : QWidget(parent),
-    SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this), InputBtn(this)
+    SimpleMsgBtn(this), CustomMsgBtn(this), OpenFileBtn(this), SaveFileBtn(this), ColorBtn(this),
+    InputBtn(this), FontBtn(this)
 {
     SimpleMsgBtn.setText("Simple Message Dialog");
     SimpleMsgBtn.move(20, 20);
@@ -32,7 +34,11 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     InputBtn.move(20, 270);
     InputBtn.resize(220, 30);
 
-    setFixedSize(260, 320);
+    FontBtn.setText("Font Dialog");
+    FontBtn.move(20, 320);
+    FontBtn.resize(220, 30);
+
+    setFixedSize(260, 370);
 
     connect(&SimpleMsgBtn, SIGNAL(clicked()), this, SLOT(SimpleMsgBtn_Clicked()));
     connect(&CustomMsgBtn, SIGNAL(clicked()), this, SLOT(CustomMsgBtn_Clicked()));
@@ -40,6 +46,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent),
     connect(&SaveFileBtn, SIGNAL(clicked()), this, SLOT(SaveFileBtn_Clicked()));
     connect(&ColorBtn, SIGNAL(clicked()), this, SLOT(ColorBtn_Clicked()));
     connect(&InputBtn, SIGNAL(clicked()), this, SLOT(InputBtn_Clicked()));
+    connect(&FontBtn, SIGNAL(clicked()), this, SLOT(FontBtn_Clicked()));
 }
 
 void Widget::SimpleMsgBtn_Clicked()
@@ -148,6 +155,22 @@ void Widget::InputBtn_Clicked()
     int ret = QInputDialog::getInt(this, "Input", "please Input a value", 0, 0 , 255);
     qDebug() << ret;
     */
+}
+
+void Widget::FontBtn_Clicked()
+{
+    QFontDialog dlg(this);
+    dlg.setWindowTitle("Font");
+
+    if(QFontDialog::Accepted == dlg.exec())
+    {
+        qDebug() << dlg.selectedFont();
+
+        FontBtn.setFont(dlg.selectedFont());
+    }
+
+    //此句跟上述代码效果一致
+    //FontBtn.setFont(QFontDialog::getFont(NULL));
 }
 
 Widget::~Widget()
