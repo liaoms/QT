@@ -1,11 +1,14 @@
 #include "Widget.h"
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 Widget::Widget(QWidget *parent) : QWidget(parent)
 {
     init();
 
-    testVHBoxLayout();
+    //testVHBoxLayout();
+    testGridLayout();
 }
 
 void Widget::init()
@@ -27,6 +30,14 @@ void Widget::init()
     m_testBtn4.setParent(this);
     m_testBtn4.setText("Btn4");
     m_testBtn4.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    m_testBtn5.setParent(this);
+    m_testBtn5.setText("Btn5");
+    m_testBtn5.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    m_testBtn6.setParent(this);
+    m_testBtn6.setText("Btn6");
+    m_testBtn6.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 void Widget::testVHBoxLayout()
@@ -48,6 +59,30 @@ void Widget::testVHBoxLayout()
     pVBoxLayout->addLayout(pHBoxLayout2, 2);
 
     this->setLayout(pVBoxLayout);
+}
+
+void Widget::testGridLayout()
+{
+    QGridLayout* pGLayout = new QGridLayout(this);
+    QVBoxLayout* pVBLayout = new QVBoxLayout(this);
+
+    pVBLayout->addWidget(&m_testBtn4);
+    pVBLayout->addWidget(&m_testBtn5);
+    pVBLayout->addWidget(&m_testBtn6);
+
+    pGLayout->setSpacing(20);
+    pGLayout->addWidget(&m_testBtn1, 0, 0);  //所处位置：第0行 第0列
+    pGLayout->addWidget(&m_testBtn2, 0, 1);
+    pGLayout->addWidget(&m_testBtn3, 1, 0);
+    pGLayout->addLayout(pVBLayout, 1, 1);
+
+    pGLayout->setRowStretch(0, 1);  //设置比例系数
+    pGLayout->setRowStretch(1, 2);
+    pGLayout->setColumnStretch(0, 1);
+    pGLayout->setColumnStretch(1, 2);
+
+    this->setLayout(pGLayout);
+
 }
 
 Widget::~Widget()

@@ -13,6 +13,8 @@ private:
     QPushButton m_testBtn2;
     QPushButton m_testBtn3;
     QPushButton m_testBtn4;
+    QPushButton m_testBtn5;
+    QPushButton m_testBtn6;
 
 public:
     Widget(QWidget *parent = 0);
@@ -20,6 +22,7 @@ public:
     void init();
 
     void testVHBoxLayout();
+    void testGridLayout();
 
     ~Widget();
 };
