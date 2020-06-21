@@ -23,5 +23,5 @@ void MyLineEdit::keyPressEvent(QKeyEvent* event)
     QLineEdit::keyPressEvent(event);
 
     //event->accept();   //接收事件，事件不会传往父组件
-    event->ignore();    //忽略事件，事件会传往父组件
+    //event->ignore();    //忽略事件，事件会传往父组件
 }
