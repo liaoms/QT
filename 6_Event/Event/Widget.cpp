@@ -162,6 +162,7 @@ bool Widget::eventFilter(QObject *watched, QEvent *event)
         {
             m_lineEdit2.insert(e->data());
         }
+        ret = false;
     }
     else
     {
