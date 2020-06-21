@@ -1,15 +1,72 @@
 #include "Widget.h"
 #include <QDebug>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QKeyEvent>
+#include <QApplication>
 
 Widget::Widget(QWidget *parent)
-    : QWidget(parent), m_lineEdit(this), m_lineEdit1(this)
+    : QWidget(parent), m_lineEdit(this), m_lineEdit1(this), m_delBtn(this), m_delBtn1(this)
 {
     resize(400, 300);
-    m_lineEdit.move(10, 10);
-    m_lineEdit1.move(10, 40);
+    initUI();
+
+    connect(&m_delBtn, SIGNAL(clicked()), this, SLOT(ondelBtnClicked()));
+    connect(&m_delBtn1, SIGNAL(clicked()), this, SLOT(ondelBtn1Clicked()));
 
     m_lineEdit.installEventFilter(this);    //组件m_lineEdit注册事件过滤器
     m_lineEdit1.installEventFilter(this);   //组件m_lineEdit1注册事件过滤器
+}
+
+void Widget::initUI()
+{
+    m_delBtn.setText("delBtn");
+    m_delBtn1.setText("delBtn1");
+
+    QVBoxLayout* pVBlayoutAll = new QVBoxLayout();
+    QVBoxLayout* pVBLayout = new QVBoxLayout();
+    QHBoxLayout* pHBLayout = new QHBoxLayout();
+
+
+    pVBLayout->addWidget(&m_lineEdit);
+    pVBLayout->addWidget(&m_lineEdit1);
+
+    pHBLayout->addWidget(&m_delBtn);
+    pHBLayout->addWidget(&m_delBtn1);
+
+    pVBlayoutAll->addLayout(pVBLayout, 4);
+    pVBlayoutAll->addLayout(pHBLayout, 4);
+
+    setLayout(pVBlayoutAll);
+
+}
+
+//点击按键，等同于聚焦到m_lineEdit中，退格删除一个字符
+void Widget::ondelBtnClicked()
+{
+    //自定义退格键的按下和松开事件
+    QKeyEvent keyPress(QKeyEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
+    QKeyEvent keyRelease(QKeyEvent::KeyRelease, Qt::Key_Backspace, Qt::NoModifier);
+
+    //发送自定义事件到m_lineEdit (效果等同于直接按退格键删除m_lineEdit中的一个字符)
+    QApplication::sendEvent(&m_lineEdit, &keyPress);
+    QApplication::sendEvent(&m_lineEdit, &keyRelease);
+
+    //sendEvent方式发送的事件为阻塞时间，等事件处理函数处理完后，才往下执行，可发送栈上和堆上申请的事件
+}
+
+//点击按键，等同于聚焦到m_lineEdit1中，退格删除一个字符
+void Widget::ondelBtn1Clicked()
+{
+    //自定义退格键的按下和松开事件
+    QKeyEvent* pKeyPress = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
+    QKeyEvent* pKeyRelease = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Backspace, Qt::NoModifier);
+
+    //发送自定义事件到m_lineEdit (效果等同于直接按退格键删除m_lineEdit1中的一个字符)
+    QApplication::postEvent(&m_lineEdit1, pKeyPress);
+    QApplication::postEvent(&m_lineEdit1, pKeyRelease);
+
+    //postEvent方式发送的事件为非阻塞时间，发送完后直接往下执行，事件会进入事件队列等待处理，所以只能发送堆上申请的事件
 }
 
 //按键按下事件先经过总事件处理函数，再经过按键按下事件处理函数
@@ -55,6 +112,7 @@ bool Widget::eventFilter(QObject *watched, QEvent *event)
                 case Qt::Key_7:
                 case Qt::Key_8:
                 case Qt::Key_9:
+                case Qt::Key_Backspace:   //补充接收退格键
                 ret = false;
                     break;
 
@@ -74,6 +132,7 @@ bool Widget::eventFilter(QObject *watched, QEvent *event)
                 case Qt::Key_F:
                 case Qt::Key_G:
                 case Qt::Key_H:
+                case Qt::Key_Backspace:
                 ret = false;
                     break;
 
