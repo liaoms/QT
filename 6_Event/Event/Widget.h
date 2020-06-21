@@ -6,6 +6,7 @@
 #include <QKeyEvent>
 #include <QPushButton>
 #include "MyLineEdit.h"
+#include "StringEvent.h"
 
 class Widget : public QWidget
 {
@@ -14,15 +15,18 @@ class Widget : public QWidget
 private:
     MyLineEdit m_lineEdit;
     MyLineEdit m_lineEdit1;
+    MyLineEdit m_lineEdit2;
 
     QPushButton m_delBtn;
     QPushButton m_delBtn1;
+    QPushButton m_delBtn2;
 
     void initUI();
 
 private slots:
     void ondelBtnClicked();
     void ondelBtn1Clicked();
+    void ondelBtn2Clicked();
 
 protected:
     bool event(QEvent *event);              //重写总事件处理函数

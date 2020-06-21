@@ -13,15 +13,18 @@ Widget::Widget(QWidget *parent)
 
     connect(&m_delBtn, SIGNAL(clicked()), this, SLOT(ondelBtnClicked()));
     connect(&m_delBtn1, SIGNAL(clicked()), this, SLOT(ondelBtn1Clicked()));
+    connect(&m_delBtn2, SIGNAL(clicked()), this, SLOT(ondelBtn2Clicked()));
 
     m_lineEdit.installEventFilter(this);    //组件m_lineEdit注册事件过滤器
     m_lineEdit1.installEventFilter(this);   //组件m_lineEdit1注册事件过滤器
+    m_lineEdit2.installEventFilter(this);
 }
 
 void Widget::initUI()
 {
     m_delBtn.setText("delBtn");
     m_delBtn1.setText("delBtn1");
+    m_delBtn2.setText("delBtn2");
 
     QVBoxLayout* pVBlayoutAll = new QVBoxLayout();
     QVBoxLayout* pVBLayout = new QVBoxLayout();
@@ -30,9 +33,11 @@ void Widget::initUI()
 
     pVBLayout->addWidget(&m_lineEdit);
     pVBLayout->addWidget(&m_lineEdit1);
+    pVBLayout->addWidget(&m_lineEdit2);
 
     pHBLayout->addWidget(&m_delBtn);
     pHBLayout->addWidget(&m_delBtn1);
+    pHBLayout->addWidget(&m_delBtn2);
 
     pVBlayoutAll->addLayout(pVBLayout, 4);
     pVBlayoutAll->addLayout(pHBLayout, 4);
@@ -67,6 +72,14 @@ void Widget::ondelBtn1Clicked()
     QApplication::postEvent(&m_lineEdit1, pKeyRelease);
 
     //postEvent方式发送的事件为非阻塞时间，发送完后直接往下执行，事件会进入事件队列等待处理，所以只能发送堆上申请的事件
+}
+
+void Widget::ondelBtn2Clicked()
+{
+    StringEvent sEvent("LMS");
+
+    //发送自定义事件到m_lineEdit2组件对象
+    QApplication::sendEvent( &m_lineEdit2, &sEvent);
 }
 
 //按键按下事件先经过总事件处理函数，再经过按键按下事件处理函数
@@ -139,6 +152,15 @@ bool Widget::eventFilter(QObject *watched, QEvent *event)
                 default:
                     break;
             }
+        }
+    }
+    else if(StringEvent::strTYPE == event->type())  //事件过滤器中设置对自定义事件的监控
+    {
+        StringEvent* e = dynamic_cast<StringEvent*>(event);
+
+        if(&m_lineEdit2 == watched)
+        {
+            m_lineEdit2.insert(e->data());
         }
     }
     else
