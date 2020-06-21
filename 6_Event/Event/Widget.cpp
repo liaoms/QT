@@ -2,7 +2,7 @@
 #include <QDebug>
 
 Widget::Widget(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), m_lineEdit(this)
 {
 
 }

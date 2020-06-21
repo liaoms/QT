@@ -4,10 +4,14 @@
 #include <QWidget>
 #include <QEvent>
 #include <QKeyEvent>
+#include "MyLineEdit.h"
 
 class Widget : public QWidget
 {
     Q_OBJECT
+
+private:
+    MyLineEdit m_lineEdit;
 
 protected:
     bool event(QEvent *event);              //重写总事件处理函数
