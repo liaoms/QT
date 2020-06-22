@@ -9,6 +9,7 @@ Widget::Widget(QWidget *parent)
     resize(600, 400);
     initUI();
 
+
     m_fsModel.setRootPath("E:/");       //设置文件模型根目录
     m_treeView.setModel(&m_fsModel);    //关联视图与模型
     m_treeView.setRootIndex(m_fsModel.index("E:/"));   //设置视图显示的根索引
@@ -30,6 +31,8 @@ void Widget::initUI()
 void Widget::onClicked(const QModelIndex &index)
 {
     qDebug() << m_fsModel.filePath(index);
+    QModelIndex index = m_fsModel.index(0,0);
+    index.
 }
 
 Widget::~Widget()
