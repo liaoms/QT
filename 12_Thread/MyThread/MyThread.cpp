@@ -1,5 +1,8 @@
 #include "MyThread.h"
 
+int MyThread::m_value = 0;
+QMutex MyThread::m_mutex;
+
 MyThread::MyThread()
 {
     m_state = 0;
@@ -28,7 +31,10 @@ void MyThread::run()
             break;
         }
 
-        qDebug() << this->objectName() << "is runing...";
-        sleep(1);
+        m_mutex.lock();
+        m_value ++;
+        qDebug() << this->objectName() << " m_value = " << m_value;
+        m_mutex.unlock();
+        //sleep(1);
     }
 }

@@ -3,7 +3,7 @@
 
 #include <QThread>
 #include <QDebug>
-
+#include <QMutex>
 class MyThread : public QThread
 {
 public:
@@ -12,6 +12,9 @@ public:
 
 private:
     volatile int m_state;    //0-休眠 1-运行 2-退出
+
+    static int m_value;
+    static QMutex m_mutex;
 
 protected:
     void run();
