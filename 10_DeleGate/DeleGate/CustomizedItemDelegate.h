@@ -1,13 +1,15 @@
 
 //自定义委托类
-#ifndef __SUBSTYLEDITEMDELEGATE_H__
-#define __SUBSTYLEDITEMDELEGATE_H__
+#ifndef __CUSTOMIZEDITEMDELEGATE_H__
+#define __CUSTOMIZEDITEMDELEGATE_H__
 
-#include <QStyledItemDelegate>
+#include <QItemDelegate>
 
-class SubStyledItemDelegate : public QStyledItemDelegate
+class CustomizedItemDelegate : public QItemDelegate
 {
     Q_OBJECT
+
+    mutable QModelIndex m_index;
 protected slots:
 
     //关闭编辑器信号组件
@@ -15,7 +17,7 @@ protected slots:
     //提交编辑器数据信号
     void onCommitData(QWidget* editor);
 public:
-    explicit SubStyledItemDelegate(QObject* parent = 0);
+    explicit CustomizedItemDelegate(QObject* parent = 0);
 
     /*
      * 重写委托关键成员函数，点击视图编辑数据时，该组成员函数会被调用
@@ -29,6 +31,8 @@ public:
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
     //重写将编辑器数据写到模型中
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+    //重写编辑器绘制函数
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
-#endif // __SUBSTYLEDITEMDELEGATE_H__
+#endif // __CUSTOMIZEDITEMDELEGATE_H__

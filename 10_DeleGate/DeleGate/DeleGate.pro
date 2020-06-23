@@ -25,9 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    SubStyledItemDelegate.cpp \
-    Widget.cpp
+    Widget.cpp \
+    CustomizedItemDelegate.cpp
 
 HEADERS += \
-    SubStyledItemDelegate.h \
-    Widget.h
+    Widget.h \
+    CustomizedItemDelegate.h

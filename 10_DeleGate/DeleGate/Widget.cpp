@@ -1,9 +1,14 @@
 #include "Widget.h"
 #include <QModelIndex>
 #include <QDebug>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 Widget::Widget(QWidget* parent) : QWidget(parent)
 {
+    resize(550, 200);
+    //setFixedSize(320, 120);
+    initUI();
     initView();
     initModel();
 
@@ -11,10 +16,20 @@ Widget::Widget(QWidget* parent) : QWidget(parent)
 
     m_testBtn.setParent(this);
     m_testBtn.move(10, 120);
-    m_testBtn.resize(300, 30);
+    m_testBtn.resize(500, 100);
     m_testBtn.setText("Test");
 
     connect(&m_testBtn, SIGNAL(clicked()), this, SLOT(onTestBtnClicked()));
+}
+
+void Widget::initUI()
+{
+    QVBoxLayout* vLayout = new QVBoxLayout();
+
+    vLayout->addWidget(&m_view, 5);
+    vLayout->addWidget(&m_testBtn, 1);
+
+    setLayout(vLayout);
 }
 
 void Widget::initView()
@@ -28,20 +43,34 @@ void Widget::initView()
 void Widget::initModel()
 {
     QStandardItem* root = m_model.invisibleRootItem();
-    QStandardItem* itemA = new QStandardItem();
-    QStandardItem* itemB = new QStandardItem();
-    QStandardItem* itemC = new QStandardItem();
-    QStandardItem* itemD = new QStandardItem();
+    QStringList hl;
+    QStandardItem* itemA1 = new QStandardItem();
+    QStandardItem* itemB1 = new QStandardItem();
+    QStandardItem* itemC1 = new QStandardItem();
+    QStandardItem* itemA2 = new QStandardItem();
+    QStandardItem* itemB2 = new QStandardItem();
+    QStandardItem* itemC2 = new QStandardItem();
 
-    itemA->setData("A", Qt::DisplayRole);
-    itemB->setData("B", Qt::DisplayRole);
-    itemC->setData("C", Qt::DisplayRole);
-    itemD->setData("D", Qt::DisplayRole);
+    hl.append("Language");
+    hl.append("Level");
+    hl.append("Script");
 
-    root->setChild(0, 0, itemA);
-    root->setChild(0, 1, itemB);
-    root->setChild(1, 0, itemC);
-    root->setChild(1, 1, itemD);
+    m_model.setHorizontalHeaderLabels(hl);
+
+    itemA1->setData("Delphi", Qt::DisplayRole);
+    itemB1->setData(QChar('A'), Qt::DisplayRole);
+    itemC1->setData(false, Qt::DisplayRole);
+
+    itemA2->setData("Perl", Qt::DisplayRole);
+    itemB2->setData(QChar('B'), Qt::DisplayRole);
+    itemC2->setData(true, Qt::DisplayRole);
+
+    root->setChild(0, 0, itemA1);
+    root->setChild(0, 1, itemB1);
+    root->setChild(0, 2, itemC1);
+    root->setChild(1, 0, itemA2);
+    root->setChild(1, 1, itemB2);
+    root->setChild(1, 2, itemC2);
 }
 
 void Widget::onTestBtnClicked()
