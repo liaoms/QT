@@ -11,7 +11,7 @@ public:
     void setRunState(int state);
 
 private:
-    volatile int m_state;    //0-暂停 1-运行 2-休眠
+    volatile int m_state;    //0-休眠 1-运行 2-退出
 
 protected:
     void run();
