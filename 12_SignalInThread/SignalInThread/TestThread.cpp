@@ -19,6 +19,7 @@ void TestThread::run()
     }
     emit testsignal();
 
+    this->exec();
     qDebug() << " thread end";
 }
 

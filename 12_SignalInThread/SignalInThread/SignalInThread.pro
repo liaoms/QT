@@ -16,8 +16,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     TestThread.cpp \
-    MyObject.cpp
+    MyObject.cpp \
+    FileWrite.cpp
 
 HEADERS += \
     TestThread.h \
-    MyObject.h
+    MyObject.h \
+    FileWrite.h
