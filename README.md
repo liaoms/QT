@@ -84,3 +84,6 @@
 	
 	<15_ThreadLife>
 	1、线程生命周期问题
+	
+	<16_AnotherThread>
+	1、另一种创建线程的方式
