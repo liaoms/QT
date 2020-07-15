@@ -16,6 +16,7 @@ void TestThread::run()
     }
 
     emit testSignal();
+    qDebug() << "TestThread::run() emit end ...";
 
     this->exec();
     qDebug() << "TestThread::run() end ...";
