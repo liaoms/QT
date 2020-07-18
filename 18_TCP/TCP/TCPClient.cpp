@@ -1,4 +1,5 @@
 #include "TCPClient.h"
+#include <QHostAddress>
 #include <QDebug>
 
 TCPClient::TCPClient(QObject *parent) : QObject(parent)
@@ -7,6 +8,7 @@ TCPClient::TCPClient(QObject *parent) : QObject(parent)
     connect(&m_client, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     connect(&m_client, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(&m_client, SIGNAL(bytesWritten(qint64)), this, SLOT(onBytesWritten(qint64)));
+    connect(&m_client, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 }
 
 TCPClient::~TCPClient()
@@ -21,23 +23,19 @@ void TCPClient::connectTo(QString address, quint16 port)
 
 void TCPClient::write(QString str)
 {
-    if(m_client.state() == QAbstractSocket::ConnectedState)
-    {
-        m_client.write(str.toLatin1());
-    }
+    m_client.write(str.toLatin1());
 }
 
 void TCPClient::close()
 {
-    if(m_client.state() == QAbstractSocket::ConnectedState)
-    {
-        m_client.close();
-    }
+    m_client.close();
 }
 
 void TCPClient::onConnected()
 {
     qDebug() << "TCPClient::onConnected()";
+    qDebug() << "connect serverIP:" << (m_client.localAddress()).toString();
+    qDebug() << "connect Port:" << m_client.localPort();
 
 }
 void TCPClient::onDisconnected()
@@ -53,4 +51,9 @@ void TCPClient::onReadyRead()
     char buf[256] = {0};
     m_client.read(buf, 256);
     qDebug() << "TCPClient::onReadyRead(), reciv:" << buf;
+}
+
+void TCPClient::onError(QAbstractSocket::SocketError socketError)
+{
+    qDebug() << "Error = " << socketError;
 }

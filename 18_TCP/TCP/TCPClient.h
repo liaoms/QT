@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QString>
+#include <QAbstractSocket>
 
 class TCPClient : public QObject
 {
@@ -25,6 +26,10 @@ public slots:
     void onDisconnected();
     void onBytesWritten(qint64 bytes);
     void onReadyRead();
+
+
+    void onError(QAbstractSocket::SocketError socketError);
+
 
 };
 
