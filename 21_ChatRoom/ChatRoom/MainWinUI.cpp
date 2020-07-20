@@ -1,6 +1,7 @@
 ﻿#include "MainWin.h"
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QMessageBox>
 
 MainWin::MainWin(QWidget *parent)
     : QWidget(parent)
@@ -20,7 +21,16 @@ bool MainWin::construct()
         ret = (login.getUser().trimmed() == "lms") && ("111111" == login.getPwd());
         if( ret )
         {
-            ret = initUI();
+            initMember();
+            if(m_client.connectTo("127.0.0.1", 8080))
+            {
+                ret = initUI();
+            }
+            else
+            {
+                QMessageBox::critical(this, "错误", "无法连接远程服务器");
+                ret = construct();
+            }
         }
     }
     else

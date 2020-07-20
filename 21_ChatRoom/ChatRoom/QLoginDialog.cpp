@@ -18,8 +18,6 @@ QLoginDialog::QLoginDialog(QWidget* parent) : QDialog(parent, Qt::WindowCloseBut
 void QLoginDialog::UiInit() //登录对话框UI布局初始化
 {
     m_groupBox.setParent(this);
-    m_groupBox.move(20, 20);
-    m_groupBox.resize(260, 160);
     m_groupBox.setTitle("登录信息");
 
     m_UserNameLabel.setParent(&m_groupBox);
