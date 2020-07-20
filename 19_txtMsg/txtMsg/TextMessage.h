@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QByteArray>
 
 //文本协议设计：消息类型(4字节) + 消息长度(4字节) + 消息体
 
@@ -23,8 +24,8 @@ public:
     QString data();
     int length();
 
-    QString serialize();   //序列化
-    bool unserialize(QString s);    //反序列化
+    QByteArray serialize();   //序列化
+    bool unserialize(QByteArray s);    //反序列化
 
 };
 

@@ -7,12 +7,17 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    TextMessage t("AAA", "1234567890abcdefg");
+    TextMessage t("AAA", "123你好世界");
 
-    QString msg = t.serialize();
+    QByteArray msg = t.serialize();
+
+    qDebug() << "msg = " << msg;
+    qDebug() << "type = " << t.type();
+    qDebug() << "length = " << t.length();
+    qDebug() << "data = " << t.data();
 
     TxtMsgAssembler ta;
-    ta.prepare(msg.toStdString().c_str(), msg.length());
+    ta.prepare(msg.data(), msg.length());
 
     QSharedPointer<TextMessage> p = ta.assemble();
 

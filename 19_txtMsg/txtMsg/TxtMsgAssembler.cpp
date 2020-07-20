@@ -14,20 +14,28 @@ void TxtMsgAssembler::prepare(const char* msg, int len)
     }
 }
 
-void TxtMsgAssembler::makeTypeAndLength()
+QByteArray TxtMsgAssembler::fetch(int n)
 {
-    if(m_MsgQueue.length() > 8)
+    QByteArray ret;
+
+    for(int i=0; i<n; i++)
+    {
+        ret.append(m_MsgQueue.dequeue());
+    }
+
+    return ret;
+}
+
+bool TxtMsgAssembler::makeTypeAndLength()
+{
+    bool ret = m_MsgQueue.length() > 8;
+    if(ret)
     {
         QString len = "";
-        for(int i=0; i<4; i++)
-        {
-            m_type.append(m_MsgQueue.dequeue());
-        }
 
-        for(int i=0; i<4; i++)
-        {
-            len.append(m_MsgQueue.dequeue());
-        }
+        m_type = QString(fetch(4));
+
+        len = QString(fetch(4));
 
         bool ret =true;
         m_length = len.toInt(&ret, 16);
@@ -37,6 +45,8 @@ void TxtMsgAssembler::makeTypeAndLength()
             reset();
         }
     }
+
+    return ret;
 }
 
 TextMessage* TxtMsgAssembler::makeMessage()
@@ -44,14 +54,11 @@ TextMessage* TxtMsgAssembler::makeMessage()
     TextMessage* ret = NULL;
     int Len = (m_length - m_data.length()) < m_MsgQueue.length() ? m_length : m_MsgQueue.length();
 
-    for(int i=0; i<Len; i++)
-    {
-        m_data.append(m_MsgQueue.dequeue());
-    }
+    m_data = fetch(Len);
 
     if((m_data.length() == m_length) && (m_length > 0))
     {
-        ret = new TextMessage(m_type, m_data);
+        ret = new TextMessage(m_type, QString(m_data));
 
         if(NULL != ret)
         {
@@ -80,8 +87,10 @@ QSharedPointer<TextMessage> TxtMsgAssembler::assemble()
     }
     else
     {
-        makeTypeAndLength();
-        ret = makeMessage();
+        if(makeTypeAndLength())
+        {
+            ret = makeMessage();
+        }
     }
 
     return QSharedPointer<TextMessage>(ret);
