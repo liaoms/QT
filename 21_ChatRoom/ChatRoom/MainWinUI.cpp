@@ -1,4 +1,4 @@
-#include "MainWin.h"
+﻿#include "MainWin.h"
 #include <QVBoxLayout>
 #include <QGridLayout>
 
@@ -44,6 +44,12 @@ MainWin* MainWin::NewInstance()
     return ret;
 }
 
+void MainWin::connectSlots()
+{
+    connect(&m_cancelBtn,SIGNAL(clicked()), this, SLOT(onCancelBtnClicked()));
+    connect(&m_sendBtn, SIGNAL(clicked()), this, SLOT(onSendBtnClicked()));
+}
+
 bool MainWin::initUI()
 {
     bool ret =true;
@@ -68,6 +74,8 @@ bool MainWin::initUI()
         setLayout(MainLayout);
 
         setFixedSize(800, 600);
+
+        connectSlots();
     }
     return ret;
 }
@@ -75,14 +83,12 @@ bool MainWin::initUI()
 bool MainWin::InitMsgGrp()
 {
     bool ret = true;
-    QPlainTextEdit* plainTextEdit = new QPlainTextEdit(this);
+    m_plainTextEdit.setParent(this);
     QVBoxLayout* vLayOut = new QVBoxLayout();
 
-    ret = (plainTextEdit && vLayOut);
-
-    if(ret)
+    if(vLayOut)
     {
-        vLayOut->addWidget(plainTextEdit);
+        vLayOut->addWidget(&m_plainTextEdit);
         m_MsgGroup.setLayout(vLayOut);
     }
 
@@ -91,26 +97,27 @@ bool MainWin::InitMsgGrp()
 bool MainWin::InitOpratorGrp()
 {
     bool ret = true;
-    QLineEdit* lineEdit = new QLineEdit(this);
-    QLabel* lable = new QLabel(this);
-    QPushButton* cancelBtn = new QPushButton(this);
-    QPushButton* sendBtn = new QPushButton(this);
+    m_lineEdit.setParent(this);
+    m_lineEdit.setFixedHeight(30);
+    m_lineEdit.setFixedHeight(30);
+
+    m_lable.setParent(this);
+    m_lable.setText("聊天软件");
+
+    m_cancelBtn.setParent(this);
+    m_cancelBtn.setText("取消");
+
+    m_sendBtn.setParent(this);
+    m_sendBtn.setText("发送");
 
     QGridLayout* gLayout = new QGridLayout();
 
-    ret = (lineEdit && lable && cancelBtn && sendBtn && gLayout);
-
-    if(ret)
+    if(gLayout)
     {
-        lineEdit->setFixedHeight(30);
-        lable->setText("聊天软件");
-        cancelBtn->setText("取消");
-        sendBtn->setText("发送");
-
-        gLayout->addWidget(lineEdit, 0, 0, 1, 5);
-        gLayout->addWidget(lable, 1, 0, 1, 1);
-        gLayout->addWidget(sendBtn, 1, 3, 1, 1);
-        gLayout->addWidget(cancelBtn, 1, 4, 1, 1);
+        gLayout->addWidget(&m_lineEdit, 0, 0, 1, 5);
+        gLayout->addWidget(&m_lable, 1, 0, 1, 1);
+        gLayout->addWidget(&m_sendBtn, 1, 3, 1, 1);
+        gLayout->addWidget(&m_cancelBtn, 1, 4, 1, 1);
 
         m_OperatorGroup.setLayout(gLayout);
     }

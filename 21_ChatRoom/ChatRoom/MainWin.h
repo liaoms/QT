@@ -1,4 +1,4 @@
-#ifndef MAINWIN_H
+﻿#ifndef MAINWIN_H
 #define MAINWIN_H
 
 #include <QWidget>
@@ -14,12 +14,20 @@ class MainWin : public QWidget
     Q_OBJECT
 private:
     QGroupBox m_OperatorGroup;
+    QLineEdit m_lineEdit;
+    QLabel m_lable;
+    QPushButton m_cancelBtn;
+    QPushButton m_sendBtn;
+
     QGroupBox m_MsgGroup;
+    QPlainTextEdit m_plainTextEdit;
 
 private:
     bool InitMsgGrp();
     bool InitOpratorGrp();
     bool initUI();
+
+    void connectSlots();
 
     bool construct();
 
@@ -27,6 +35,10 @@ private:
 public:
     static MainWin* NewInstance();
     ~MainWin();
+
+protected slots:
+    void onCancelBtnClicked();
+    void onSendBtnClicked();
 };
 
 #endif // MAINWIN_H

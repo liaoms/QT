@@ -25,8 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        MainWin.cpp \
-    QLoginDialog.cpp
+    QLoginDialog.cpp \
+    MainWinSlots.cpp \
+    MainWinUI.cpp
 
 HEADERS += \
         MainWin.h \
