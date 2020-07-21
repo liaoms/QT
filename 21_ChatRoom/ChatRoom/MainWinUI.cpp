@@ -2,44 +2,25 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QMessageBox>
+#include <QThread>
 
 MainWin::MainWin(QWidget *parent)
     : QWidget(parent)
 {
-
+    m_mapHandle.insert("CONN", CONN_handle);
+    m_mapHandle.insert("DSCN", DSCN_handle);
+    m_mapHandle.insert("LIOK", LIOK_handle);
+    m_mapHandle.insert("LIER", LIER_handle);
+    m_mapHandle.insert("MSGA", MSGA_handle);
 }
 
 bool MainWin::construct()
 {
-    QLoginDialog login(this);
-
-    bool ret = true;
-
-    if(login.exec() == QDialog::Accepted)
-    {
-
-        ret = (login.getUser().trimmed() == "lms") && ("111111" == login.getPwd());
-        if( ret )
-        {
-            initMember();
-            if(m_client.connectTo("127.0.0.1", 8080))
-            {
-                ret = initUI();
-            }
-            else
-            {
-                QMessageBox::critical(this, "错误", "无法连接远程服务器");
-                ret = construct();
-            }
-        }
-    }
-    else
-    {
-        ret = false;
-    }
-
+    initMember();
+    bool ret = initUI();
     return ret;
 }
+
 
 MainWin* MainWin::NewInstance()
 {
@@ -56,8 +37,29 @@ MainWin* MainWin::NewInstance()
 
 void MainWin::connectSlots()
 {
+    connect(&m_LoginBtn,SIGNAL(clicked()), this, SLOT(onLoginBtnClicked()));
     connect(&m_cancelBtn,SIGNAL(clicked()), this, SLOT(onCancelBtnClicked()));
     connect(&m_sendBtn, SIGNAL(clicked()), this, SLOT(onSendBtnClicked()));
+}
+
+void MainWin::enableCtrl(bool enable)
+{
+    m_lineEdit.setEnabled(enable);
+    m_sendBtn.setEnabled(enable);
+    m_cancelBtn.setEnabled(enable);
+
+    if(enable)
+    {
+        m_LoginBtn.setText("断开登陆");
+        m_lable.setText("已连接");
+    }
+    else
+    {
+        m_LoginBtn.setText("登陆");
+        m_lable.setText("未连接");
+        m_lineEdit.clear();
+        m_plainTextEdit.clear();
+    }
 }
 
 bool MainWin::initUI()
@@ -74,7 +76,7 @@ bool MainWin::initUI()
         m_MsgGroup.setTitle("消息框");
 
         m_OperatorGroup.setParent(this);
-        m_OperatorGroup.setTitle("操作框");
+        m_OperatorGroup.setTitle("用户名");
         m_OperatorGroup.setFixedHeight(150);
 
         MainLayout->addWidget(&m_MsgGroup);
@@ -83,9 +85,10 @@ bool MainWin::initUI()
 
         setLayout(MainLayout);
 
-        setFixedSize(800, 600);
+        setFixedSize(600, 450);
 
         connectSlots();
+        enableCtrl(false);
     }
     return ret;
 }
@@ -112,7 +115,10 @@ bool MainWin::InitOpratorGrp()
     m_lineEdit.setFixedHeight(30);
 
     m_lable.setParent(this);
-    m_lable.setText("聊天软件");
+    m_lable.setText("未连接");
+
+    m_LoginBtn.setParent(this);
+    m_LoginBtn.setText("登陆");
 
     m_cancelBtn.setParent(this);
     m_cancelBtn.setText("取消");
@@ -126,6 +132,7 @@ bool MainWin::InitOpratorGrp()
     {
         gLayout->addWidget(&m_lineEdit, 0, 0, 1, 5);
         gLayout->addWidget(&m_lable, 1, 0, 1, 1);
+        gLayout->addWidget(&m_LoginBtn, 1, 2, 1, 1);
         gLayout->addWidget(&m_sendBtn, 1, 3, 1, 1);
         gLayout->addWidget(&m_cancelBtn, 1, 4, 1, 1);
 
@@ -138,5 +145,5 @@ bool MainWin::InitOpratorGrp()
 
 MainWin::~MainWin()
 {
-
+    m_client.close();
 }

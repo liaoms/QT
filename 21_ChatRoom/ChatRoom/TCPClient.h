@@ -23,6 +23,8 @@ public:
     void close();
 
     void setHandle(TxtMsgHandle* handle);
+
+    bool isValid();
 private:
     QTcpSocket m_client;
     TxtMsgAssembler m_Assembler;

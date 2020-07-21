@@ -67,7 +67,7 @@ void TCPServer::onNewConnection()
 }
 void TCPServer::onAcceptError(QAbstractSocket::SocketError socketError)
 {
-    qDebug() << "server: error [" << socketError << "]";
+
 }
 
 void TCPServer::onConnected()
@@ -91,32 +91,38 @@ void TCPServer::onDisconnected()
 void TCPServer::onBytesWritten(qint64 bytes)
 {
     QTcpSocket* tcp = dynamic_cast<QTcpSocket*>(sender());
-    qDebug() << "server : write [" << bytes << "] bytes to [" << (tcp->peerAddress()).toString() << ":" << tcp->peerPort() << "]";
 }
 void TCPServer::onReadyRead()
 {
     QTcpSocket* tcp = dynamic_cast<QTcpSocket*>(sender());
     char buf[256] =  {0};
+    int len = 0;
 
     if( tcp != NULL )
     {
-        tcp->read(buf, 256);
-        qDebug() << "server : recive [" << buf << "] from " << (tcp->peerAddress()).toString() << ":" << tcp->peerPort();
-
         TxtMsgAssembler* pAssembler = m_map[tcp];
-        QSharedPointer<TextMessage> msg = pAssembler->assemble(buf, strlen(buf));
-
-        if(!msg.isNull())
+        while( (len = tcp->read(buf, 256)) > 0 )
         {
-            m_pMsgHandle->handle(tcp, *msg);
-            tcp->write(msg->serialize());
+            if(NULL != pAssembler)
+            {
+                pAssembler->prepare(buf, len);
+            }
+
+            QSharedPointer<TextMessage> msg = NULL;
+            while( NULL != (msg = pAssembler->assemble()) )
+            {
+                if( NULL != m_pMsgHandle )
+                {
+                    m_pMsgHandle->handle(tcp, *msg);
+                }
+            }
         }
     }
 }
 
 void TCPServer::onError(QAbstractSocket::SocketError socketError)
 {
-    qDebug() << socketError;
+    //qDebug() << socketError;
 }
 
 

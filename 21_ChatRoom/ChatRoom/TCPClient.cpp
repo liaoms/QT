@@ -38,11 +38,16 @@ void TCPClient::setHandle(TxtMsgHandle* handle)
     m_pMsgHandle = handle;
 }
 
+bool TCPClient::isValid()
+{
+    return m_client.isValid();
+}
+
 void TCPClient::onConnected()
 {
     if(m_pMsgHandle)
     {
-        TextMessage msg("CONN", m_client.peerAddress().toString() + QString::number(m_client.peerPort()));
+        TextMessage msg("CONN", m_client.peerAddress().toString() + ":" + QString::number(m_client.peerPort()));
         m_pMsgHandle->handle(&m_client, msg);
     }
 }
@@ -57,24 +62,29 @@ void TCPClient::onDisconnected()
 }
 void TCPClient::onBytesWritten(qint64 bytes)
 {
-    qDebug() << "client: write [" << bytes << "] bytes to" << (m_client.peerAddress()).toString() << ":" << m_client.peerPort() << "succeed!";
+
 }
 void TCPClient::onReadyRead()
 {
-    QTcpSocket* tcp = dynamic_cast<QTcpSocket*>(sender());
     char buf[256] = {0};
-    m_client.read(buf, 256);
-    qDebug() << "client: read [" << buf << "] from " << (m_client.peerAddress()).toString() << ":" << m_client.peerPort() << "succeed!";
+    int len = 0;
 
-    QSharedPointer<TextMessage> msg = m_Assembler.assemble(buf, strlen(buf));
-
-    if(!msg.isNull())
+    while( (len = m_client.read(buf, sizeof(buf))) > 0 )
     {
-        m_pMsgHandle->handle(tcp, *msg);
+        m_Assembler.prepare(buf, len);
+
+        QSharedPointer<TextMessage> msg = NULL;
+        while( NULL != (msg = m_Assembler.assemble()) )
+        {
+            if( NULL != m_pMsgHandle )
+            {
+                m_pMsgHandle->handle(&m_client, *msg);
+            }
+        }
     }
 }
 
 void TCPClient::onError(QAbstractSocket::SocketError socketError)
 {
-    qDebug() << "Client : Error [" << socketError << "]";
+
 }
