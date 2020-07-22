@@ -1,5 +1,6 @@
 ﻿#include "MainWin.h"
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QThread>
@@ -12,6 +13,8 @@ MainWin::MainWin(QWidget *parent)
     m_mapHandle.insert("LIOK", LIOK_handle);
     m_mapHandle.insert("LIER", LIER_handle);
     m_mapHandle.insert("MSGA", MSGA_handle);
+    m_mapHandle.insert("MSGP", MSGP_handle);
+    m_mapHandle.insert("USER", USER_handle);
 }
 
 bool MainWin::construct()
@@ -59,7 +62,29 @@ void MainWin::enableCtrl(bool enable)
         m_lable.setText("未连接");
         m_lineEdit.clear();
         m_plainTextEdit.clear();
+        m_listWidget.clear();
     }
+}
+
+QString MainWin::getCheckedUser()
+{
+    QString usr;
+
+    for(int i=0; i<m_listWidget.count(); i++)
+    {
+        QListWidgetItem* item = m_listWidget.item(i);
+        if( (item->checkState() == ::Qt::Checked) && (item->text() != m_OperatorGroup.title()) )
+        {
+            usr.append(item->text());
+            usr.append('\r');
+        }
+    }
+
+    if(usr.length() > 0)
+    {
+        usr = usr.mid(0, usr.length()-1);
+    }
+    return usr;
 }
 
 bool MainWin::initUI()
@@ -97,12 +122,16 @@ bool MainWin::InitMsgGrp()
 {
     bool ret = true;
     m_plainTextEdit.setParent(this);
-    QVBoxLayout* vLayOut = new QVBoxLayout();
+    m_listWidget.setParent(this);
+    m_listWidget.clear();
 
-    if(vLayOut)
+    QHBoxLayout* hLayOut = new QHBoxLayout();
+
+    if(hLayOut)
     {
-        vLayOut->addWidget(&m_plainTextEdit);
-        m_MsgGroup.setLayout(vLayOut);
+        hLayOut->addWidget(&m_plainTextEdit, 7);
+        hLayOut->addWidget(&m_listWidget, 3);
+        m_MsgGroup.setLayout(hLayOut);
     }
 
     return ret;

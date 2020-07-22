@@ -7,6 +7,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QListWidget>
 #include <QMap>
 #include "QLoginDialog.h"
 #include "TextMessage.h"
@@ -29,6 +30,7 @@ private:
 
     QGroupBox m_MsgGroup;
     QPlainTextEdit m_plainTextEdit;
+    QListWidget m_listWidget;
 
     TCPClient m_client;
     QLoginDialog m_login;
@@ -43,6 +45,7 @@ private:
 
     void connectSlots();
     void enableCtrl(bool enable);
+    QString getCheckedUser();
 
     bool construct();
 
@@ -51,6 +54,8 @@ private:
     void LIER_handle(QTcpSocket* socket, TextMessage& message);
     void LIOK_handle(QTcpSocket* socket, TextMessage& message);
     void MSGA_handle(QTcpSocket* socket, TextMessage& message);
+    void MSGP_handle(QTcpSocket* socket, TextMessage& message);
+    void USER_handle(QTcpSocket* socket, TextMessage& message);
 
     MainWin(QWidget *parent = 0);
 public:

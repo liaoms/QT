@@ -28,11 +28,15 @@ private:
     QList<Node*> m_Nodelist;
     QMap<QString, MsgHandle> m_mapHandle;
 
+    QString getOnlineUserId();
+    void SendToAllOnLine(TextMessage& mmessage);
+
 private:
     void CONN_handle(QTcpSocket* socket, TextMessage& message);
     void DSCN_handle(QTcpSocket* socket, TextMessage& message);
     void LGIN_handle(QTcpSocket* socket, TextMessage& message);
     void MSGA_handle(QTcpSocket* socket, TextMessage& message);
+    void MSGP_handle(QTcpSocket* socket, TextMessage& message);
 public:
 
     ServerHandle();
